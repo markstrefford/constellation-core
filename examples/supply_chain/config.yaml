@@ -1,0 +1,140 @@
+seed: 42
+ticks: 500
+domain: supply_chain
+bidirectional_edges: false
+
+nodes:
+  - id: shanghai
+    properties:
+      raw_materials_stock: 500
+      raw_materials_production: 20
+      price_raw: 10
+      wealth: 100000
+    metadata:
+      label: "Shanghai Port"
+      type: port
+
+  - id: rotterdam
+    properties:
+      raw_materials_stock: 50
+      price_raw: 15
+      wealth: 50000
+    metadata:
+      label: "Rotterdam Port"
+      type: port
+
+  - id: stuttgart
+    properties:
+      raw_materials_stock: 100
+      finished_goods_stock: 200
+      finished_goods_production: 8
+      raw_materials_consumption: 12
+      price_raw: 20
+      price_finished: 50
+      wealth: 80000
+    metadata:
+      label: "Stuttgart Factory"
+      type: factory
+
+  - id: munich
+    properties:
+      finished_goods_stock: 80
+      finished_goods_consumption: 5
+      price_finished: 65
+      wealth: 60000
+    metadata:
+      label: "Munich Distribution"
+      type: retail
+
+  - id: berlin
+    properties:
+      finished_goods_stock: 60
+      finished_goods_consumption: 6
+      price_finished: 68
+      wealth: 60000
+    metadata:
+      label: "Berlin Distribution"
+      type: retail
+
+edges:
+  - from: shanghai
+    to: rotterdam
+    distance: 20
+    edge_type: ocean
+
+  - from: rotterdam
+    to: stuttgart
+    distance: 5
+    edge_type: road
+
+  - from: stuttgart
+    to: rotterdam
+    distance: 5
+    edge_type: road
+
+  - from: stuttgart
+    to: munich
+    distance: 3
+    edge_type: road
+
+  - from: munich
+    to: stuttgart
+    distance: 3
+    edge_type: road
+
+  - from: stuttgart
+    to: berlin
+    distance: 4
+    edge_type: road
+
+  - from: berlin
+    to: stuttgart
+    distance: 4
+    edge_type: road
+
+agents:
+  - id: ocean_freighter
+    starting_location: shanghai
+    properties:
+      cargo_capacity: 200
+      speed: 1
+      cargo_quantity: 0
+    metadata:
+      role: freighter
+      cargo_type: raw_materials
+      route: [shanghai, rotterdam]
+
+  - id: truck_1
+    starting_location: rotterdam
+    properties:
+      cargo_capacity: 50
+      speed: 1
+      cargo_quantity: 0
+    metadata:
+      role: truck
+      cargo_type: raw_materials
+      route: [rotterdam, stuttgart]
+
+  - id: truck_2
+    starting_location: stuttgart
+    properties:
+      cargo_capacity: 50
+      speed: 1
+      cargo_quantity: 0
+    metadata:
+      role: truck
+      cargo_type: finished_goods
+      route: [stuttgart, munich, berlin]
+
+scenario_events:
+  - tick: 200
+    type: edge_disruption
+    parameters:
+      from: shanghai
+      to: rotterdam
+      new_distance: 40
+
+domain_config:
+  price_elasticity: 1.0
+  base_price_raw: 10
+  base_price_finished: 50

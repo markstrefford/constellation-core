@@ -1,0 +1,130 @@
+seed: 42
+ticks: 500
+domain: stock_market
+bidirectional_edges: true
+
+nodes:
+  - id: exchange
+    properties:
+      stock_a_price: 100
+      stock_b_price: 50
+      stock_c_price: 200
+      stock_d_price: 75
+      stock_e_price: 150
+      stock_a_volume: 0
+      stock_b_volume: 0
+      stock_c_volume: 0
+      stock_d_volume: 0
+      stock_e_volume: 0
+      total_buy_orders: 0
+      total_sell_orders: 0
+      market_sentiment: 0.5
+    metadata:
+      label: "Exchange"
+
+edges: []
+
+agents:
+  # 10 momentum traders
+  - id: momentum_01
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 1, risk_tolerance: 0.7,
+                  stock_a: 10, stock_b: 20, stock_c: 5, stock_d: 15, stock_e: 8 }
+  - id: momentum_02
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 1, risk_tolerance: 0.6,
+                  stock_a: 8, stock_b: 15, stock_c: 10, stock_d: 12, stock_e: 5 }
+  - id: momentum_03
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 1, risk_tolerance: 0.8,
+                  stock_a: 12, stock_b: 10, stock_c: 8, stock_d: 10, stock_e: 10 }
+  - id: momentum_04
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 1, risk_tolerance: 0.65,
+                  stock_a: 5, stock_b: 25, stock_c: 3, stock_d: 20, stock_e: 7 }
+  - id: momentum_05
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 1, risk_tolerance: 0.75,
+                  stock_a: 15, stock_b: 8, stock_c: 12, stock_d: 8, stock_e: 12 }
+  - id: momentum_06
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 1, risk_tolerance: 0.7,
+                  stock_a: 10, stock_b: 12, stock_c: 6, stock_d: 14, stock_e: 9 }
+  - id: momentum_07
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 1, risk_tolerance: 0.55,
+                  stock_a: 7, stock_b: 18, stock_c: 4, stock_d: 16, stock_e: 6 }
+  - id: momentum_08
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 1, risk_tolerance: 0.85,
+                  stock_a: 20, stock_b: 5, stock_c: 15, stock_d: 5, stock_e: 15 }
+  - id: momentum_09
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 1, risk_tolerance: 0.6,
+                  stock_a: 9, stock_b: 14, stock_c: 7, stock_d: 11, stock_e: 10 }
+  - id: momentum_10
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 1, risk_tolerance: 0.7,
+                  stock_a: 11, stock_b: 11, stock_c: 9, stock_d: 13, stock_e: 8 }
+
+  # 5 contrarian traders
+  - id: contrarian_01
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 2, risk_tolerance: 0.5,
+                  stock_a: 10, stock_b: 10, stock_c: 10, stock_d: 10, stock_e: 10 }
+  - id: contrarian_02
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 2, risk_tolerance: 0.4,
+                  stock_a: 8, stock_b: 12, stock_c: 8, stock_d: 12, stock_e: 8 }
+  - id: contrarian_03
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 2, risk_tolerance: 0.6,
+                  stock_a: 12, stock_b: 8, stock_c: 12, stock_d: 8, stock_e: 12 }
+  - id: contrarian_04
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 2, risk_tolerance: 0.45,
+                  stock_a: 9, stock_b: 11, stock_c: 9, stock_d: 11, stock_e: 9 }
+  - id: contrarian_05
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 2, risk_tolerance: 0.55,
+                  stock_a: 11, stock_b: 9, stock_c: 11, stock_d: 9, stock_e: 11 }
+
+  # 5 random traders
+  - id: random_01
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 3, risk_tolerance: 0.3,
+                  stock_a: 10, stock_b: 10, stock_c: 10, stock_d: 10, stock_e: 10 }
+  - id: random_02
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 3, risk_tolerance: 0.3,
+                  stock_a: 10, stock_b: 10, stock_c: 10, stock_d: 10, stock_e: 10 }
+  - id: random_03
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 3, risk_tolerance: 0.3,
+                  stock_a: 10, stock_b: 10, stock_c: 10, stock_d: 10, stock_e: 10 }
+  - id: random_04
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 3, risk_tolerance: 0.3,
+                  stock_a: 10, stock_b: 10, stock_c: 10, stock_d: 10, stock_e: 10 }
+  - id: random_05
+    starting_location: exchange
+    properties: { cash: 10000, strategy: 3, risk_tolerance: 0.3,
+                  stock_a: 10, stock_b: 10, stock_c: 10, stock_d: 10, stock_e: 10 }
+
+scenario_events:
+  - tick: 100
+    type: price_shock
+    parameters:
+      stock: stock_a
+      multiplier: 1.2
+
+  - tick: 300
+    type: sentiment_shock
+    parameters:
+      sentiment: 0.1
+
+domain_config:
+  stocks: [stock_a, stock_b, stock_c, stock_d, stock_e]
+  price_impact_factor: 0.001
+  sentiment_alpha: 0.1
+  max_order_fraction: 0.1

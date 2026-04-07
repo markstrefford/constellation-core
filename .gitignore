@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.db
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg
+.venv/
+
+# Viewer
+viewer/node_modules/
+viewer/dist/
