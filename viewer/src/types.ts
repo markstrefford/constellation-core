@@ -13,6 +13,8 @@ export interface EdgeData {
 
 export interface AgentSnapshot {
   location: string
+  origin: string
+  destination: string
   properties: Record<string, number>
   metadata: Record<string, string | number | boolean>
 }

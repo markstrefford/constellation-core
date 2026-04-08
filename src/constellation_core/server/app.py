@@ -46,8 +46,24 @@ def _run_simulation_thread(sim: Simulation, plugin: Any, ticks: int) -> None:
 
             # Build snapshot for viewer
             if sim.state:
+                # Use the tick from the events (before increment) not state.tick
+                tick_num = sim.state.tick - 1
+
+                agents_snap = {}
+                for aid, agent in sim.state.agents.items():
+                    agents_snap[aid] = {
+                        "location": agent.location,
+                        "origin": agent.metadata.get("origin", ""),
+                        "destination": agent.metadata.get("destination", ""),
+                        "properties": dict(agent.properties),
+                        "metadata": {
+                            k: v for k, v in agent.metadata.items()
+                            if isinstance(v, (str, int, float, bool))
+                        },
+                    }
+
                 snapshot = {
-                    "tick": sim.state.tick - 1,  # tick was already incremented
+                    "tick": tick_num,
                     "nodes": {
                         nid: {
                             "properties": dict(node.properties),
@@ -55,17 +71,7 @@ def _run_simulation_thread(sim: Simulation, plugin: Any, ticks: int) -> None:
                         }
                         for nid, node in sim.state.nodes.items()
                     },
-                    "agents": {
-                        aid: {
-                            "location": agent.location,
-                            "properties": dict(agent.properties),
-                            "metadata": {
-                                k: v for k, v in agent.metadata.items()
-                                if isinstance(v, (str, int, float, bool))
-                            },
-                        }
-                        for aid, agent in sim.state.agents.items()
-                    },
+                    "agents": agents_snap,
                 }
                 _sim_state["snapshots"].append(snapshot)
 
@@ -127,8 +133,18 @@ def create_app(config_path: str, ticks: int | None = None) -> Any:
     )
 
     # Serve viewer static files if they exist
-    viewer_dist = Path(__file__).parent.parent.parent.parent / "viewer" / "dist"
-    if viewer_dist.exists():
+    # Check multiple possible locations for the viewer dist
+    viewer_dist = None
+    candidates = [
+        Path(__file__).parent.parent.parent.parent / "viewer" / "dist",  # from source tree
+        Path.cwd() / "viewer" / "dist",  # from project root
+    ]
+    for candidate in candidates:
+        if candidate.exists() and (candidate / "index.html").exists():
+            viewer_dist = candidate
+            break
+
+    if viewer_dist is not None:
         app.mount("/viewer", StaticFiles(directory=str(viewer_dist), html=True), name="viewer")
 
     @app.get("/api/topology")

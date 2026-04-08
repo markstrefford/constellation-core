@@ -7,7 +7,7 @@ nodes:
   - id: shanghai
     properties:
       raw_materials_stock: 500
-      raw_materials_production: 20
+      raw_materials_production: 15
       price_raw: 10
       wealth: 100000
     metadata:
@@ -16,7 +16,7 @@ nodes:
 
   - id: rotterdam
     properties:
-      raw_materials_stock: 50
+      raw_materials_stock: 200
       price_raw: 15
       wealth: 50000
     metadata:
@@ -25,10 +25,10 @@ nodes:
 
   - id: stuttgart
     properties:
-      raw_materials_stock: 100
-      finished_goods_stock: 200
-      finished_goods_production: 8
-      raw_materials_consumption: 12
+      raw_materials_stock: 200
+      finished_goods_stock: 300
+      finished_goods_production: 6
+      raw_materials_consumption: 8
       price_raw: 20
       price_finished: 50
       wealth: 80000
@@ -38,8 +38,8 @@ nodes:
 
   - id: munich
     properties:
-      finished_goods_stock: 80
-      finished_goods_consumption: 5
+      finished_goods_stock: 150
+      finished_goods_consumption: 2
       price_finished: 65
       wealth: 60000
     metadata:
@@ -48,8 +48,8 @@ nodes:
 
   - id: berlin
     properties:
-      finished_goods_stock: 60
-      finished_goods_consumption: 6
+      finished_goods_stock: 120
+      finished_goods_consumption: 2.5
       price_finished: 68
       wealth: 60000
     metadata:
@@ -59,17 +59,17 @@ nodes:
 edges:
   - from: shanghai
     to: rotterdam
-    distance: 20
+    distance: 15
     edge_type: ocean
 
   - from: rotterdam
     to: stuttgart
-    distance: 5
+    distance: 4
     edge_type: road
 
   - from: stuttgart
     to: rotterdam
-    distance: 5
+    distance: 4
     edge_type: road
 
   - from: stuttgart
@@ -84,19 +84,19 @@ edges:
 
   - from: stuttgart
     to: berlin
-    distance: 4
+    distance: 3
     edge_type: road
 
   - from: berlin
     to: stuttgart
-    distance: 4
+    distance: 3
     edge_type: road
 
 agents:
   - id: ocean_freighter
     starting_location: shanghai
     properties:
-      cargo_capacity: 200
+      cargo_capacity: 250
       speed: 1
       cargo_quantity: 0
     metadata:
@@ -104,10 +104,10 @@ agents:
       cargo_type: raw_materials
       route: [shanghai, rotterdam]
 
-  - id: truck_1
+  - id: truck_raw
     starting_location: rotterdam
     properties:
-      cargo_capacity: 50
+      cargo_capacity: 80
       speed: 1
       cargo_quantity: 0
     metadata:
@@ -115,16 +115,27 @@ agents:
       cargo_type: raw_materials
       route: [rotterdam, stuttgart]
 
-  - id: truck_2
+  - id: truck_munich
     starting_location: stuttgart
     properties:
-      cargo_capacity: 50
+      cargo_capacity: 40
       speed: 1
       cargo_quantity: 0
     metadata:
       role: truck
       cargo_type: finished_goods
-      route: [stuttgart, munich, berlin]
+      route: [stuttgart, munich]
+
+  - id: truck_berlin
+    starting_location: stuttgart
+    properties:
+      cargo_capacity: 40
+      speed: 1
+      cargo_quantity: 0
+    metadata:
+      role: truck
+      cargo_type: finished_goods
+      route: [stuttgart, berlin]
 
 scenario_events:
   - tick: 200
@@ -132,7 +143,7 @@ scenario_events:
     parameters:
       from: shanghai
       to: rotterdam
-      new_distance: 40
+      new_distance: 35
 
 domain_config:
   price_elasticity: 1.0

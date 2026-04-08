@@ -23,8 +23,6 @@ function layoutNodes(topology: Topology): Record<string, NodePos> {
     return positions
   }
 
-  // Force-directed-ish layout using adjacency
-  // Start with circle layout, then nudge based on edges
   const cx = 400
   const cy = 300
   const radius = Math.min(250, 80 * n)
@@ -37,14 +35,13 @@ function layoutNodes(topology: Topology): Record<string, NodePos> {
     }
   })
 
-  // Simple spring iterations to improve layout
+  // Spring iterations
   for (let iter = 0; iter < 50; iter++) {
     const forces: Record<string, { fx: number; fy: number }> = {}
     for (const node of topology.nodes) {
       forces[node.id] = { fx: 0, fy: 0 }
     }
 
-    // Repulsion between all pairs
     for (let i = 0; i < n; i++) {
       for (let j = i + 1; j < n; j++) {
         const a = topology.nodes[i].id
@@ -60,7 +57,6 @@ function layoutNodes(topology: Topology): Record<string, NodePos> {
       }
     }
 
-    // Attraction along edges
     for (const edge of topology.edges) {
       const a = edge.origin
       const b = edge.destination
@@ -78,19 +74,16 @@ function layoutNodes(topology: Topology): Record<string, NodePos> {
       }
     }
 
-    // Center gravity
     for (const node of topology.nodes) {
       const pos = positions[node.id]
       forces[node.id].fx += (cx - pos.x) * 0.005
       forces[node.id].fy += (cy - pos.y) * 0.005
     }
 
-    // Apply forces
     for (const node of topology.nodes) {
       const f = forces[node.id]
       positions[node.id].x += Math.max(-10, Math.min(10, f.fx))
       positions[node.id].y += Math.max(-10, Math.min(10, f.fy))
-      // Clamp to viewport
       positions[node.id].x = Math.max(60, Math.min(740, positions[node.id].x))
       positions[node.id].y = Math.max(60, Math.min(540, positions[node.id].y))
     }
@@ -112,17 +105,39 @@ const NODE_TYPE_COLORS: Record<string, string> = {
   exchange: '#ab47bc',
 }
 
+const COURIER_COLORS = ['#fdd835', '#ff7043', '#26c6da', '#ab47bc', '#e53935', '#66bb6a']
+
 export default function TopologyMap({ topology, snapshot, selectedNode, onSelectNode }: Props) {
   const positions = useMemo(() => layoutNodes(topology), [topology])
 
-  // Count agents per node
+  // Categorise agents: at node vs in transit
   const agentsAtNode: Record<string, string[]> = {}
+  const agentsInTransit: { id: string; origin: string; dest: string; progress: number; cargo: number }[] = []
+
   if (snapshot) {
-    for (const [aid, agent] of Object.entries(snapshot.agents)) {
-      const loc = agent.location
-      if (!agentsAtNode[loc]) agentsAtNode[loc] = []
-      agentsAtNode[loc].push(aid)
-    }
+    Object.entries(snapshot.agents).forEach(([aid, agent]) => {
+      const dest = String(agent.destination || agent.properties?.destination || '')
+      const origin = String(agent.origin || agent.properties?.origin || '')
+      const eta = agent.properties?.eta ?? 0
+      const etaTotal = agent.properties?.eta_total ?? 0
+      const status = agent.properties?.status ?? 0
+
+      if (status === 1 && dest && origin && etaTotal > 0) {
+        // In transit — compute progress [0, 1]
+        const progress = 1 - (eta / etaTotal)
+        agentsInTransit.push({
+          id: aid,
+          origin,
+          dest,
+          progress: Math.max(0, Math.min(1, progress)),
+          cargo: agent.properties?.cargo_quantity ?? 0,
+        })
+      } else {
+        const loc = agent.location
+        if (!agentsAtNode[loc]) agentsAtNode[loc] = []
+        agentsAtNode[loc].push(aid)
+      }
+    })
   }
 
   return (
@@ -140,17 +155,64 @@ export default function TopologyMap({ topology, snapshot, selectedNode, onSelect
               x2={to.x} y2={to.y}
               stroke={color}
               strokeWidth={1.5}
-              opacity={0.6}
+              opacity={0.5}
             />
-            {/* Distance label */}
             <text
               x={(from.x + to.x) / 2}
               y={(from.y + to.y) / 2 - 6}
-              fill="#888"
-              fontSize="10"
+              fill="#666"
+              fontSize="9"
               textAnchor="middle"
             >
               {edge.distance}
+            </text>
+          </g>
+        )
+      })}
+
+      {/* Couriers in transit */}
+      {agentsInTransit.map((courier, i) => {
+        const from = positions[courier.origin]
+        const to = positions[courier.dest]
+        if (!from || !to) return null
+        const t = courier.progress
+        const x = from.x + (to.x - from.x) * t
+        const y = from.y + (to.y - from.y) * t
+        const color = COURIER_COLORS[i % COURIER_COLORS.length]
+        const hasCargo = courier.cargo > 0
+        const r = hasCargo ? 8 : 5
+
+        return (
+          <g key={`courier-${courier.id}`}>
+            {/* Trail line from origin to current pos */}
+            <line
+              x1={from.x} y1={from.y} x2={x} y2={y}
+              stroke={color} strokeWidth={2} opacity={0.3}
+            />
+            {/* Courier dot */}
+            <circle
+              cx={x} cy={y} r={r}
+              fill={color}
+              stroke="#fff"
+              strokeWidth={1}
+              opacity={0.95}
+            />
+            {/* Cargo indicator */}
+            {hasCargo && (
+              <text
+                x={x} y={y + 3}
+                fill="#000" fontSize="7" textAnchor="middle" fontWeight="bold"
+              >
+                {Math.round(courier.cargo)}
+              </text>
+            )}
+            {/* Label */}
+            <text
+              x={x} y={y - r - 4}
+              fill={color} fontSize="9" textAnchor="middle"
+              opacity={0.8}
+            >
+              {courier.id}
             </text>
           </g>
         )
@@ -173,7 +235,6 @@ export default function TopologyMap({ topology, snapshot, selectedNode, onSelect
             style={{ cursor: 'pointer' }}
             onClick={() => onSelectNode(isSelected ? null : node.id)}
           >
-            {/* Node circle */}
             <circle
               cx={pos.x} cy={pos.y}
               r={isSelected ? 28 : 22}
@@ -182,7 +243,6 @@ export default function TopologyMap({ topology, snapshot, selectedNode, onSelect
               stroke={isSelected ? '#fff' : 'none'}
               strokeWidth={2}
             />
-            {/* Label */}
             <text
               x={pos.x} y={pos.y - 30}
               fill="#e0e0e0"
@@ -192,20 +252,13 @@ export default function TopologyMap({ topology, snapshot, selectedNode, onSelect
             >
               {label}
             </text>
-            {/* Agent count badge */}
+            {/* Courier count badge */}
             {agentCount > 0 && (
               <>
-                <circle
-                  cx={pos.x + 18} cy={pos.y - 14}
-                  r={9}
-                  fill="#e53935"
-                />
+                <circle cx={pos.x + 18} cy={pos.y - 14} r={9} fill="#e53935" />
                 <text
                   x={pos.x + 18} y={pos.y - 10}
-                  fill="#fff"
-                  fontSize="10"
-                  textAnchor="middle"
-                  fontWeight="bold"
+                  fill="#fff" fontSize="10" textAnchor="middle" fontWeight="bold"
                 >
                   {agentCount}
                 </text>

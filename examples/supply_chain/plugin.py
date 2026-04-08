@@ -28,6 +28,7 @@ class ConsumptionEvent(Event):
     node_id: str = ""
     resource: str = ""
     amount: float = 0
+    rationing: float = 1.0  # 1.0 = full, <1 = rationed
 
 
 @dataclass(frozen=True)
@@ -63,6 +64,7 @@ class AgentMoveEvent(Event):
     agent_id: str = ""
     from_node: str = ""
     to_node: str = ""
+    eta: int = 0
 
 
 @dataclass(frozen=True)
@@ -99,6 +101,26 @@ def _elasticity_multiplier(current: float, target: float, elasticity: float = 1.
     return math.exp(elasticity * (1 - ratio))
 
 
+def _consumption_ratio(stock: float, rate: float, critical_ticks: float = 10.0) -> float:
+    """
+    Elastic consumption: when stock is low relative to consumption,
+    consumption throttles smoothly rather than cliff-edging to zero.
+
+    Returns a multiplier in [0, 1].
+    - Stock >= critical threshold: consume at full rate (1.0)
+    - Stock approaching zero: consumption drops toward 0
+    """
+    if rate <= 0:
+        return 1.0
+    critical_stock = rate * critical_ticks
+    if stock >= critical_stock:
+        return 1.0
+    if stock <= 0:
+        return 0.0
+    # Smooth curve: (stock / critical) ^ 0.5 — bends gently
+    return (stock / critical_stock) ** 0.5
+
+
 # --- Plugin ---
 
 
@@ -106,9 +128,9 @@ class SupplyChainPlugin:
     """
     Global logistics simulation.
 
-    Nodes are ports, factories, and retail hubs. Agents are freighters
-    and trucks that move cargo between them. Production, consumption,
-    and pricing are all domain logic living here, not in the core.
+    Nodes are ports, factories, and retail hubs. Couriers (agents) move
+    cargo between them. Production, consumption, and pricing are all
+    domain logic living here, not in the core.
     """
 
     def get_tick_phases(self) -> list[str]:
@@ -123,18 +145,18 @@ class SupplyChainPlugin:
         ]
 
     def setup(self, state: EnvironmentState, config: dict[str, Any]) -> None:
-        # Initialize agent transit state
         for agent in state.agents.values():
             agent.properties.setdefault("cargo_quantity", 0)
             agent.properties.setdefault("cargo_capacity", 50)
             agent.properties.setdefault("speed", 1)
             agent.properties.setdefault("eta", 0)
+            agent.properties.setdefault("eta_total", 0)
             agent.properties.setdefault("status", 0)  # 0=idle, 1=in_transit
-            agent.metadata.setdefault("route_index", 0)
-            agent.metadata.setdefault("loaded", False)
             agent.metadata.setdefault("destination", "")
+            agent.metadata.setdefault("origin", "")
+            # Direction: 0 = outbound (toward end of route), 1 = return (toward start)
+            agent.metadata.setdefault("direction", 0)
 
-        # Store pending scenario events
         self._pending_scenarios: list[ScenarioEvent] = []
 
     def run_phase(
@@ -160,15 +182,12 @@ class SupplyChainPlugin:
         return []
 
     def _run_scenario(self, state: EnvironmentState, config: dict[str, Any]) -> list[Event]:
-        """Apply any pending scenario events."""
-        events: list[Event] = []
         for se in self._pending_scenarios:
             handle_scenario_event(se, state)
         self._pending_scenarios.clear()
-        return events
+        return []
 
     def notify_scenario_event(self, event: ScenarioEvent) -> None:
-        """Called by the engine (via tick loop) to queue scenario events."""
         self._pending_scenarios.append(event)
 
     def _run_production(self, state: EnvironmentState, config: dict[str, Any]) -> list[Event]:
@@ -176,7 +195,7 @@ class SupplyChainPlugin:
         tick = state.tick
 
         for node in state.nodes.values():
-            # Raw materials production
+            # Raw materials production (ports/mines)
             rate = node.properties.get("raw_materials_production", 0)
             if rate > 0:
                 node.properties["raw_materials_stock"] = (
@@ -191,7 +210,6 @@ class SupplyChainPlugin:
             rm_needed = node.properties.get("raw_materials_consumption", 0)
             if fg_rate > 0 and rm_needed > 0:
                 rm_stock = node.properties.get("raw_materials_stock", 0)
-                # Produce proportionally to available raw materials
                 if rm_stock >= rm_needed:
                     production = fg_rate
                     node.properties["raw_materials_stock"] = rm_stock - rm_needed
@@ -221,24 +239,21 @@ class SupplyChainPlugin:
         base_finished = config.get("base_price_finished", 50)
 
         for node in state.nodes.values():
-            # Price raw materials based on stock
             if "price_raw" in node.properties:
                 stock = node.properties.get("raw_materials_stock", 0)
-                target = 100  # comfortable stock level
+                target = 150
                 old_price = node.properties["price_raw"]
                 multiplier = _elasticity_multiplier(stock, target, elasticity)
                 new_price = max(1.0, base_raw * multiplier)
-                # Smooth: 30% toward target
                 node.properties["price_raw"] = old_price * 0.7 + new_price * 0.3
                 events.append(PriceUpdateEvent(
                     tick=tick, node_id=node.id, resource="raw_materials",
                     old_price=old_price, new_price=node.properties["price_raw"],
                 ))
 
-            # Price finished goods
             if "price_finished" in node.properties:
                 stock = node.properties.get("finished_goods_stock", 0)
-                target = 80
+                target = 100
                 old_price = node.properties["price_finished"]
                 multiplier = _elasticity_multiplier(stock, target, elasticity)
                 new_price = max(1.0, base_finished * multiplier)
@@ -251,110 +266,103 @@ class SupplyChainPlugin:
         return events
 
     def _run_decisions(self, state: EnvironmentState, config: dict[str, Any]) -> list[Event]:
-        """Route-based agent decisions: load at source, travel, deliver at dest."""
+        """
+        Courier decisions: simple shuttle pattern.
+        Each courier has a route [A, B] (or [A, B, C]).
+        Outbound: load at first stop, deliver at last stop.
+        Return: head back empty (or could carry return cargo in future).
+        """
         events: list[Event] = []
         tick = state.tick
 
         for agent in state.agents.values():
             if agent.properties.get("status", 0) == 1:
-                # In transit, skip decisions
-                continue
+                continue  # in transit
 
             route = agent.metadata.get("route", [])
-            if not route:
+            if len(route) < 2:
                 continue
 
             cargo_type = agent.metadata.get("cargo_type", "raw_materials")
             stock_key = f"{cargo_type}_stock"
             cargo_qty = agent.properties.get("cargo_quantity", 0)
             capacity = agent.properties.get("cargo_capacity", 50)
-            route_index = agent.metadata.get("route_index", 0)
+            direction = agent.metadata.get("direction", 0)
 
-            if cargo_qty > 0 and agent.metadata.get("loaded", False):
-                # Has cargo — deliver if at a destination that wants it
+            if cargo_qty > 0:
+                # Has cargo — deliver at current location (must be a delivery point)
                 node = state.nodes.get(agent.location)
-                if node and route_index > 0:
-                    # Deliver cargo
-                    delivered = cargo_qty
-                    node.properties[stock_key] = node.properties.get(stock_key, 0) + delivered
-                    agent.properties["cargo_quantity"] = 0
-                    agent.metadata["loaded"] = False
+                if node:
+                    node.properties[stock_key] = node.properties.get(stock_key, 0) + cargo_qty
                     events.append(CargoDeliverEvent(
                         tick=tick, agent_id=agent.id, node_id=agent.location,
-                        resource=cargo_type, quantity=delivered,
+                        resource=cargo_type, quantity=cargo_qty,
                     ))
-                    # Advance route or reverse
-                    if route_index >= len(route) - 1:
-                        agent.metadata["route_index"] = 0
-                    else:
-                        agent.metadata["route_index"] = route_index + 1
+                    agent.properties["cargo_quantity"] = 0
 
-                    # Start heading to next stop
-                    next_idx = agent.metadata["route_index"]
-                    next_dest = route[next_idx]
-                    if next_dest != agent.location:
-                        dist = state.graph.shortest_path_distance(agent.location, next_dest)
-                        if dist is not None:
-                            agent.properties["eta"] = math.ceil(dist / max(agent.properties.get("speed", 1), 0.1))
-                            agent.properties["status"] = 1
-                            agent.metadata["destination"] = next_dest
-                            events.append(AgentMoveEvent(
-                                tick=tick, agent_id=agent.id,
-                                from_node=agent.location, to_node=next_dest,
-                            ))
-                else:
-                    # Not at delivery point — travel to next route stop
-                    next_dest = route[min(route_index + 1, len(route) - 1)]
-                    if next_dest != agent.location:
-                        dist = state.graph.shortest_path_distance(agent.location, next_dest)
-                        if dist is not None:
-                            agent.properties["eta"] = math.ceil(dist / max(agent.properties.get("speed", 1), 0.1))
-                            agent.properties["status"] = 1
-                            agent.metadata["destination"] = next_dest
-                            agent.metadata["route_index"] = route.index(next_dest) if next_dest in route else route_index + 1
-                            events.append(AgentMoveEvent(
-                                tick=tick, agent_id=agent.id,
-                                from_node=agent.location, to_node=next_dest,
-                            ))
+                # After delivery, reverse direction and head back
+                agent.metadata["direction"] = 1 - direction
+                dest = route[0] if direction == 0 else route[-1]
+                self._depart(agent, dest, state, events, tick)
 
             else:
                 # No cargo — try to load at current location
-                node = state.nodes.get(agent.location)
-                if node:
-                    available = node.properties.get(stock_key, 0)
-                    load_qty = min(capacity, available)
-                    if load_qty > 0:
-                        node.properties[stock_key] = available - load_qty
-                        agent.properties["cargo_quantity"] = load_qty
-                        agent.metadata["loaded"] = True
-                        events.append(CargoLoadEvent(
-                            tick=tick, agent_id=agent.id, node_id=agent.location,
-                            resource=cargo_type, quantity=load_qty,
-                        ))
+                source = route[0] if direction == 0 else route[-1]
+                dest = route[-1] if direction == 0 else route[0]
 
-                # After loading (or if nothing to load), head to next route stop
-                if route_index < len(route) - 1:
-                    next_dest = route[route_index + 1]
+                if agent.location == source:
+                    # At source — load cargo
+                    node = state.nodes.get(agent.location)
+                    if node:
+                        available = node.properties.get(stock_key, 0)
+                        # Leave a small reserve so the node isn't stripped bare
+                        reserve = 20
+                        loadable = max(0, available - reserve)
+                        load_qty = min(capacity, loadable)
+                        if load_qty > 0:
+                            node.properties[stock_key] = available - load_qty
+                            agent.properties["cargo_quantity"] = load_qty
+                            events.append(CargoLoadEvent(
+                                tick=tick, agent_id=agent.id, node_id=agent.location,
+                                resource=cargo_type, quantity=load_qty,
+                            ))
+
+                    # Head to destination (even if empty — don't get stuck)
+                    if agent.properties.get("cargo_quantity", 0) > 0:
+                        self._depart(agent, dest, state, events, tick)
+                    elif available <= reserve:
+                        # Nothing to load, wait for stock to build up
+                        pass
+                    else:
+                        self._depart(agent, dest, state, events, tick)
                 else:
-                    next_dest = route[0]
-
-                if next_dest != agent.location:
-                    dist = state.graph.shortest_path_distance(agent.location, next_dest)
-                    if dist is not None:
-                        agent.properties["eta"] = math.ceil(dist / max(agent.properties.get("speed", 1), 0.1))
-                        agent.properties["status"] = 1
-                        agent.metadata["destination"] = next_dest
-                        new_idx = route.index(next_dest) if next_dest in route else route_index + 1
-                        agent.metadata["route_index"] = new_idx
-                        events.append(AgentMoveEvent(
-                            tick=tick, agent_id=agent.id,
-                            from_node=agent.location, to_node=next_dest,
-                        ))
+                    # Not at source — head to source
+                    self._depart(agent, source, state, events, tick)
 
         return events
 
+    def _depart(
+        self, agent: Any, destination: str,
+        state: EnvironmentState, events: list[Event], tick: int,
+    ) -> None:
+        """Send a courier toward a destination."""
+        if destination == agent.location:
+            return
+        dist = state.graph.shortest_path_distance(agent.location, destination)
+        if dist is None:
+            return
+        eta = max(1, math.ceil(dist / max(agent.properties.get("speed", 1), 0.1)))
+        agent.metadata["origin"] = agent.location
+        agent.metadata["destination"] = destination
+        agent.properties["eta"] = eta
+        agent.properties["eta_total"] = eta
+        agent.properties["status"] = 1
+        events.append(AgentMoveEvent(
+            tick=tick, agent_id=agent.id,
+            from_node=agent.location, to_node=destination, eta=eta,
+        ))
+
     def _run_movement(self, state: EnvironmentState, config: dict[str, Any]) -> list[Event]:
-        """Progress agents in transit."""
         events: list[Event] = []
         tick = state.tick
 
@@ -366,12 +374,13 @@ class SupplyChainPlugin:
             if eta > 1:
                 agent.properties["eta"] = eta - 1
             else:
-                # Arrived
                 dest = agent.metadata.get("destination", "")
                 if dest:
                     agent.location = dest
                     agent.properties["status"] = 0
                     agent.properties["eta"] = 0
+                    agent.properties["eta_total"] = 0
+                    agent.metadata["origin"] = ""
                     agent.metadata["destination"] = ""
                     events.append(AgentArriveEvent(
                         tick=tick, agent_id=agent.id, node_id=dest,
@@ -380,28 +389,31 @@ class SupplyChainPlugin:
         return events
 
     def _run_consumption(self, state: EnvironmentState, config: dict[str, Any]) -> list[Event]:
+        """Elastic consumption: throttle when stock is low instead of cliff-edge to zero."""
         events: list[Event] = []
         tick = state.tick
 
         for node in state.nodes.values():
-            # Consume finished goods
             rate = node.properties.get("finished_goods_consumption", 0)
             if rate > 0:
                 stock = node.properties.get("finished_goods_stock", 0)
-                if stock >= rate:
-                    consumed = rate
-                else:
-                    consumed = stock
-                    if rate > 0:
-                        events.append(ShortageEvent(
-                            tick=tick, node_id=node.id, resource="finished_goods",
-                            needed=rate, available=stock,
-                        ))
-                node.properties["finished_goods_stock"] = max(0, stock - consumed)
-                if consumed > 0:
+                ratio = _consumption_ratio(stock, rate)
+                actual = rate * ratio
+
+                if actual > stock:
+                    actual = stock
+
+                if actual > 0:
+                    node.properties["finished_goods_stock"] = stock - actual
                     events.append(ConsumptionEvent(
                         tick=tick, node_id=node.id,
-                        resource="finished_goods", amount=consumed,
+                        resource="finished_goods", amount=actual, rationing=ratio,
+                    ))
+
+                if ratio < 0.8:
+                    events.append(ShortageEvent(
+                        tick=tick, node_id=node.id, resource="finished_goods",
+                        needed=rate, available=stock,
                     ))
 
         return events
@@ -411,17 +423,21 @@ class SupplyChainPlugin:
             nid: dict(node.properties)
             for nid, node in state.nodes.items()
         }
-        agents_snapshot = {
-            aid: {"location": a.location, **a.properties}
-            for aid, a in state.agents.items()
-        }
+        agents_snapshot = {}
+        for aid, a in state.agents.items():
+            agent_data: dict[str, Any] = {
+                "location": a.location,
+                "origin": a.metadata.get("origin", ""),
+                "destination": a.metadata.get("destination", ""),
+                **{k: v for k, v in a.properties.items()},
+            }
+            agents_snapshot[aid] = agent_data
         return [SnapshotEvent(
             tick=state.tick, nodes=nodes_snapshot, agents=agents_snapshot,
         )]
 
     def build_observation(self, agent_id: str, state: EnvironmentState) -> dict[str, Any]:
         agent = state.agents[agent_id]
-        # Agent sees its own state and nearby nodes
         visible_nodes = {}
         neighbors = [agent.location] + state.graph.neighbors(agent.location)
         for nid in neighbors:
@@ -455,7 +471,6 @@ class SupplyChainPlugin:
     def execute_action(
         self, agent_id: str, action: dict[str, Any], state: EnvironmentState, tick: int
     ) -> list[Event]:
-        # Actions are handled internally in _run_decisions for algorithmic agents
         return []
 
 
@@ -466,7 +481,6 @@ def handle_scenario_event(event: ScenarioEvent, state: EnvironmentState) -> None
         to_node = event.parameters.get("to", "")
         new_distance = event.parameters.get("new_distance", 0)
 
-        # Rebuild edges with modified distance
         new_edges = []
         for edge in state.graph.edges:
             if edge.origin == from_node and edge.destination == to_node:
@@ -479,6 +493,5 @@ def handle_scenario_event(event: ScenarioEvent, state: EnvironmentState) -> None
             else:
                 new_edges.append(edge)
 
-        # Rebuild the graph
         from constellation_core.topology.graph import Graph
         state.graph = Graph(node_ids=state.graph.node_ids, edges=new_edges)
