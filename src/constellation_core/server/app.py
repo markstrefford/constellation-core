@@ -21,6 +21,8 @@ _sim_state: dict[str, Any] = {
     "current_tick": 0,
     "status": "idle",
     "snapshots": [],  # latest snapshot per tick for the viewer
+    "tick_delay": 0.2,  # seconds between ticks (default: 5 ticks/sec)
+    "paused": False,
 }
 
 
@@ -75,7 +77,10 @@ def _run_simulation_thread(sim: Simulation, plugin: Any, ticks: int) -> None:
                 }
                 _sim_state["snapshots"].append(snapshot)
 
-            time.sleep(0.02)  # ~50 ticks/sec max, gives viewer time to render
+            # Controllable speed — check pause and delay each tick
+            while _sim_state["paused"]:
+                time.sleep(0.1)
+            time.sleep(max(0.01, _sim_state["tick_delay"]))
 
         _sim_state["status"] = "completed"
     except Exception as e:
@@ -193,6 +198,29 @@ def create_app(config_path: str, ticks: int | None = None) -> Any:
         if 0 <= tick < len(_sim_state["snapshots"]):
             return _sim_state["snapshots"][tick]
         return {"error": "tick not available"}
+
+    @app.post("/api/speed")
+    def set_speed(delay: float = 0.2) -> dict[str, Any]:
+        """Set tick delay in seconds. Lower = faster. Min 0.01, max 2.0."""
+        _sim_state["tick_delay"] = max(0.01, min(2.0, delay))
+        return {"tick_delay": _sim_state["tick_delay"]}
+
+    @app.post("/api/pause")
+    def pause_simulation() -> dict[str, Any]:
+        _sim_state["paused"] = True
+        return {"paused": True}
+
+    @app.post("/api/resume")
+    def resume_simulation() -> dict[str, Any]:
+        _sim_state["paused"] = False
+        return {"paused": False}
+
+    @app.get("/api/playback")
+    def get_playback() -> dict[str, Any]:
+        return {
+            "tick_delay": _sim_state["tick_delay"],
+            "paused": _sim_state["paused"],
+        }
 
     @app.get("/api/events")
     async def stream_events(request: Request) -> StreamingResponse:
