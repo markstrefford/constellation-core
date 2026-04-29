@@ -21,7 +21,7 @@ class Node:
     """
 
     id: str
-    properties: dict[str, float] = field(default_factory=dict)
+    properties: dict[str, Any] = field(default_factory=dict)
     metadata: dict[str, Any] = field(default_factory=dict)
 
 

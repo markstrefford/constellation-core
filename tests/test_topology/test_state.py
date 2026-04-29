@@ -25,6 +25,21 @@ class TestNode:
         assert n.properties == {}
         assert n.metadata == {}
 
+    def test_mixed_type_properties(self):
+        n = Node(
+            id="planet",
+            properties={
+                "stock": 100.0,
+                "role": "refiner",
+                "production": {"fuel_raw": 10.0, "food": 3.0},
+                "queue": [1, 2, 3],
+            },
+        )
+        assert n.properties["stock"] == 100.0
+        assert n.properties["role"] == "refiner"
+        assert n.properties["production"]["fuel_raw"] == 10.0
+        assert n.properties["queue"] == [1, 2, 3]
+
 
 class TestEnvironmentState:
     def test_creation(self):
