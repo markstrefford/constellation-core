@@ -85,12 +85,17 @@ class Graph:
         origin: str,
         destination: str,
         allowed_types: set[str] | None = None,
+        allowed_nodes: set[str] | None = None,
     ) -> list[str] | None:
         """
         Find shortest path using Dijkstra's algorithm.
 
         Returns list of node IDs from origin to destination (inclusive),
         or None if no path exists.
+
+        If allowed_nodes is provided, intermediate nodes outside the set are
+        skipped during expansion. Origin and destination are not filtered —
+        callers chose them deliberately.
         """
         if origin == destination:
             return [origin]
@@ -119,6 +124,12 @@ class Graph:
             for neighbor, edge_dist, edge_type in self._adjacency.get(current, []):
                 if allowed_types is not None and edge_type not in allowed_types:
                     continue
+                if (
+                    allowed_nodes is not None
+                    and neighbor != destination
+                    and neighbor not in allowed_nodes
+                ):
+                    continue
                 if neighbor in visited:
                     continue
                 new_dist = d + edge_dist
@@ -143,9 +154,10 @@ class Graph:
         origin: str,
         destination: str,
         allowed_types: set[str] | None = None,
+        allowed_nodes: set[str] | None = None,
     ) -> float | None:
         """Get total distance of shortest path, or None if no path exists."""
-        path = self.shortest_path(origin, destination, allowed_types)
+        path = self.shortest_path(origin, destination, allowed_types, allowed_nodes)
         if path is None:
             return None
 

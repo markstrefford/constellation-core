@@ -91,6 +91,93 @@ class TestGraph:
         # All types: goes through B
         assert g.shortest_path("a", "c") == ["a", "b", "c"]
 
+    def test_allowed_nodes_excludes_intermediate(self):
+        """4-node chain A-B-C-D. Excluding B blocks the only route."""
+        edges = [
+            Edge("a", "b", 1.0),
+            Edge("b", "a", 1.0),
+            Edge("b", "c", 1.0),
+            Edge("c", "b", 1.0),
+            Edge("c", "d", 1.0),
+            Edge("d", "c", 1.0),
+        ]
+        g = Graph(node_ids=["a", "b", "c", "d"], edges=edges)
+        assert (
+            g.shortest_path("a", "d", allowed_nodes={"a", "c", "d"}) is None
+        )
+
+    def test_allowed_nodes_picks_permitted_route(self):
+        """Two routes A->D: through B (permitted) vs through C (blocked)."""
+        edges = [
+            Edge("a", "b", 1.0),
+            Edge("b", "d", 1.0),
+            Edge("a", "c", 1.0),
+            Edge("c", "d", 1.0),
+        ]
+        g = Graph(node_ids=["a", "b", "c", "d"], edges=edges)
+        path = g.shortest_path("a", "d", allowed_nodes={"a", "b", "d"})
+        assert path == ["a", "b", "d"]
+
+    def test_allowed_nodes_does_not_filter_endpoints(self):
+        """Endpoints are not subject to the filter even if absent from set."""
+        edges = [Edge("a", "b", 1.0), Edge("b", "c", 1.0)]
+        g = Graph(node_ids=["a", "b", "c"], edges=edges)
+        # Endpoint 'c' missing from set: still reachable.
+        assert g.shortest_path("a", "c", allowed_nodes={"a", "b"}) == [
+            "a",
+            "b",
+            "c",
+        ]
+
+    def test_allowed_nodes_combined_with_allowed_types(self):
+        """Both filters apply simultaneously."""
+        edges = [
+            Edge("a", "b", 1.0, edge_type="road"),
+            Edge("b", "d", 1.0, edge_type="road"),
+            Edge("a", "c", 1.0, edge_type="ocean"),
+            Edge("c", "d", 1.0, edge_type="ocean"),
+        ]
+        g = Graph(node_ids=["a", "b", "c", "d"], edges=edges)
+        # Road-only with B blocked: no path.
+        assert (
+            g.shortest_path(
+                "a",
+                "d",
+                allowed_types={"road"},
+                allowed_nodes={"a", "c", "d"},
+            )
+            is None
+        )
+        # Ocean-only with B blocked: still works via C.
+        assert g.shortest_path(
+            "a",
+            "d",
+            allowed_types={"ocean"},
+            allowed_nodes={"a", "c", "d"},
+        ) == ["a", "c", "d"]
+
+    def test_allowed_nodes_default_preserves_behaviour(self):
+        g = self._simple_graph()
+        assert g.shortest_path("a", "c") == ["a", "b", "c"]
+        assert g.shortest_path("a", "c", allowed_nodes=None) == ["a", "b", "c"]
+
+    def test_shortest_path_distance_honours_allowed_nodes(self):
+        """Distance reflects the filtered path, not the unrestricted shortest."""
+        edges = [
+            Edge("a", "b", 1.0),
+            Edge("b", "d", 1.0),
+            Edge("a", "c", 5.0),
+            Edge("c", "d", 5.0),
+        ]
+        g = Graph(node_ids=["a", "b", "c", "d"], edges=edges)
+        # Unrestricted: A->B->D = 2.0
+        assert g.shortest_path_distance("a", "d") == 2.0
+        # Block B: forced through C = 10.0
+        assert (
+            g.shortest_path_distance("a", "d", allowed_nodes={"a", "c", "d"})
+            == 10.0
+        )
+
     def test_nonexistent_node(self):
         g = self._simple_graph()
         assert g.shortest_path("a", "z") is None
