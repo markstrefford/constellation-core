@@ -13,3 +13,12 @@ build/
 # Viewer
 viewer/node_modules/
 viewer/dist/
+
+# Others
+outputs/
+
+# SDLC: track only settled docs (architecture, strategy, runbooks, decisions).
+# Working state, raw capture, and the operator/AI session bridge stay local.
+sdlc/work/
+sdlc/raw/
+sdlc/STATE.md
