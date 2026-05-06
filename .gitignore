@@ -14,6 +14,9 @@ build/
 viewer/node_modules/
 viewer/dist/
 
+# mkdocs build output
+site/
+
 # Others
 outputs/
 

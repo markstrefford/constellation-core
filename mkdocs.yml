@@ -1,0 +1,61 @@
+site_name: constellation-core
+site_description: A domain-agnostic simulation platform for multi-agent simulations.
+site_url: https://markstrefford.github.io/constellation-core/
+repo_url: https://github.com/markstrefford/constellation-core
+repo_name: markstrefford/constellation-core
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  font:
+    text: Outfit
+    code: JetBrains Mono
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - content.code.copy
+  palette:
+    # Dark first — constellation is dark by default
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Getting started: getting-started.md
+  - Concepts: concepts.md
+  - Build a domain: build-a-domain.md
+  - Reference:
+      - Plugin protocol: plugin-protocol.md
+      - Configuration: configuration.md
+      - Agents: agents.md
+      - Persistence: persistence.md
+  - Viewer: viewer.md
+  - Examples: examples.md
+  - FAQ: faq.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md

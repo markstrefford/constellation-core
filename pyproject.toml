@@ -25,6 +25,9 @@ dev = [
     "ruff>=0.4",
     "mypy>=1.0",
 ]
+docs = [
+    "mkdocs-material>=9.5,<10",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/constellation_core"]

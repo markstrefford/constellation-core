@@ -1,0 +1,91 @@
+/* Constellation palette for mkdocs-material
+   Mirrors public/style.css from the constellation marketing site. */
+
+:root {
+  --md-primary-fg-color:        #34d399;
+  --md-primary-fg-color--light: #4eeab5;
+  --md-primary-fg-color--dark:  #10b981;
+  --md-primary-bg-color:        #050508;
+  --md-primary-bg-color--light: #050508;
+  --md-accent-fg-color:         #34d399;
+  --md-accent-fg-color--transparent: rgba(52, 211, 153, 0.15);
+}
+
+/* Dark scheme — the default, matches reimagined.industries/constellation */
+[data-md-color-scheme="slate"] {
+  --md-hue: 240;
+
+  --md-default-bg-color:           #050508;
+  --md-default-bg-color--light:    #0a0a10;
+  --md-default-bg-color--lighter:  #111118;
+  --md-default-bg-color--lightest: #1a1a22;
+
+  --md-default-fg-color:           #e8e8ed;
+  --md-default-fg-color--light:    #a8a8b8;
+  --md-default-fg-color--lighter:  #55556a;
+  --md-default-fg-color--lightest: rgba(255, 255, 255, 0.06);
+
+  --md-code-bg-color:              #0a0a10;
+  --md-code-fg-color:              #e8e8ed;
+
+  --md-typeset-color:              #e8e8ed;
+  --md-typeset-a-color:            #34d399;
+
+  --md-footer-bg-color:            #0a0a10;
+  --md-footer-bg-color--dark:      #050508;
+  --md-footer-fg-color:            #e8e8ed;
+  --md-footer-fg-color--light:     #a8a8b8;
+  --md-footer-fg-color--lighter:   #55556a;
+
+  --md-accent-fg-color:            #34d399;
+  --md-accent-fg-color--transparent: rgba(52, 211, 153, 0.15);
+}
+
+/* Light scheme — same accent, lighter surfaces for readability */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color:        #10b981;
+  --md-accent-fg-color:          #10b981;
+  --md-typeset-a-color:          #10b981;
+}
+
+/* Subtle headings — match constellation marketing site's light weight */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.md-typeset h1 {
+  font-weight: 300;
+}
+
+/* Code block contrast on dark surface */
+[data-md-color-scheme="slate"] .md-typeset code {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #e8e8ed;
+}
+
+[data-md-color-scheme="slate"] .md-typeset pre > code {
+  background-color: #0a0a10;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Header tint — constellation's near-black, not material's primary green */
+[data-md-color-scheme="slate"] .md-header {
+  background-color: rgba(5, 5, 8, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-md-color-scheme="slate"] .md-tabs {
+  background-color: rgba(5, 5, 8, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Brand hint on the site name in the header */
+.md-header__title .md-ellipsis {
+  color: #34d399;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
