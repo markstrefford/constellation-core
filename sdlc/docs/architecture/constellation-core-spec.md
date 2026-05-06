@@ -1,3 +1,12 @@
+---
+id: constellation-core-spec
+kind: architecture
+project: constellation-core
+verified-on: 2026-05-06
+sources: []
+tags: [architecture, base-platform, layer-model]
+---
+
 # constellation-core: Implementation Spec
 
 ## What This Is

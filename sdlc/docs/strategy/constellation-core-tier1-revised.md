@@ -1,3 +1,12 @@
+---
+id: constellation-core-tier1-revised
+kind: strategy
+project: constellation-core
+verified-on: 2026-05-06
+sources: []
+tags: [strategy, tier1, implementation-plan]
+---
+
 # constellation-core: Tier 1 Implementation Plan (Revised)
 
 ## What Changed

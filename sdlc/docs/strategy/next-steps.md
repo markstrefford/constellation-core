@@ -1,3 +1,12 @@
+---
+id: next-steps
+kind: strategy
+project: constellation-core
+verified-on: 2026-05-06
+sources: []
+tags: [strategy, roadmap, known-issues]
+---
+
 # Next Steps
 
 ## Known Issues (Tier 1)
