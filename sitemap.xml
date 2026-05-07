@@ -2,6 +2,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://markstrefford.github.io/constellation-core/</loc>
-         <lastmod>2026-05-06</lastmod>
+         <lastmod>2026-05-07</lastmod>
+    </url>
+    <url>
+         <loc>https://markstrefford.github.io/constellation-core/concepts/</loc>
+         <lastmod>2026-05-07</lastmod>
     </url>
 </urlset>

@@ -1,0 +1,1692 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A domain-agnostic simulation platform for multi-agent simulations.">
+      
+      
+      
+        <link rel="canonical" href="https://markstrefford.github.io/constellation-core/concepts/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Concepts - constellation-core</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Outfit:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Outfit";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#concepts" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="constellation-core" class="md-header__button md-logo" aria-label="constellation-core" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            constellation-core
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Concepts
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/markstrefford/constellation-core" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    markstrefford/constellation-core
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../getting-started.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Concepts
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../build-a-domain.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Build a domain
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../plugin-protocol.md" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../viewer.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Viewer
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../examples.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Examples
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../faq.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  FAQ
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../contributing.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../changelog.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="constellation-core" class="md-nav__button md-logo" aria-label="constellation-core" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    constellation-core
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/markstrefford/constellation-core" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    markstrefford/constellation-core
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-constellation-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why constellation-core
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-five-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The five layers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The five layers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1 — Engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2 — Topology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-domain-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3 — Domain rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-agentic-behaviour" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4 — Agentic behaviour
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-5-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 5 — Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-each-layer-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where each layer lives
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-worked-example-a-tiny-tick-based-space-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A worked example: a tiny tick-based space simulation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="A worked example: a tiny tick-based space simulation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-engine_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1 — Engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-topology_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2 — Topology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-domain-rules_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3 — Domain rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-agentic-behaviour_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4 — Agentic behaviour
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-5-analysis_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 5 — Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-that-buys-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What that buys you
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-crosses-between-the-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What crosses between the layers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-properties-are-dicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why properties are dicts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-this-fits-in-the-ecosystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where this fits in the ecosystem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-boundary-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The boundary rule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to go next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../build-a-domain.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a domain
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugin-protocol.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agents.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../persistence.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persistence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../viewer.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Viewer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-constellation-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why constellation-core
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-five-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The five layers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The five layers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1 — Engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2 — Topology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-domain-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3 — Domain rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-agentic-behaviour" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4 — Agentic behaviour
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-5-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 5 — Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-each-layer-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where each layer lives
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-worked-example-a-tiny-tick-based-space-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A worked example: a tiny tick-based space simulation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="A worked example: a tiny tick-based space simulation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-engine_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1 — Engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-topology_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2 — Topology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-domain-rules_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3 — Domain rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-agentic-behaviour_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4 — Agentic behaviour
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-5-analysis_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 5 — Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-that-buys-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What that buys you
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-crosses-between-the-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What crosses between the layers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-properties-are-dicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why properties are dicts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-this-fits-in-the-ecosystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where this fits in the ecosystem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-boundary-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The boundary rule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to go next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="concepts">Concepts</h1>
+<h2 id="why-constellation-core">Why constellation-core</h2>
+<p>If you want to simulate something — a logistics network, a market, a power grid, an organisation, a colony of spaceships — most existing tools force a choice. On one side: rich domain-specific frameworks (logistics-only, market-only, RL-environments-only) that solve your problem if it fits the framework's mould. On the other: low-level numerical libraries where you build the simulation, the agents, the persistence, and the visualisation from scratch.</p>
+<p>constellation-core sits in between. It gives you a generic simulation substrate — a graph of nodes and edges, an engine that drives time, an agent protocol, scenario events, persistence, and a real-time viewer — and stays out of the way of your domain. You add the rules. You add the agents. You add the analysis. The platform supplies the structure that all of those pieces plug into.</p>
+<p>The pay-off: when your simulation outgrows its first domain, you don't rebuild the platform. The same engine that runs a global supply chain runs a stock market with no core code changes — only a new plugin.</p>
+<p>This page explains how constellation-core is layered, what each layer is responsible for, and the rule for deciding where new code belongs. It uses a small worked example — a tick-based space simulation — to ground the abstractions.</p>
+<hr />
+<h2 id="the-five-layers">The five layers</h2>
+<p>constellation-core is structured as five layers. The bottom two are the platform. The top three are yours (or a plugin you depend on).</p>
+<h3 id="layer-1-engine">Layer 1 — Engine</h3>
+<p>The engine drives time. Today, that means a tick loop: on every tick, the engine asks a plugin which phases to run, then runs each phase in order. A "phase" is a piece of plugin logic — production, pricing, decisions, snapshots — whatever the domain requires. The engine has no opinions on phase count, phase order, or phase content.</p>
+<p>A planned event-driven engine extension will let the same core host turn-based and message-driven simulations alongside ticking ones, but as of v0.2 the loop is tick-only.</p>
+<h3 id="layer-2-topology">Layer 2 — Topology</h3>
+<p>The topology layer is the structure of your simulation's universe. constellation-core provides a generic graph: nodes connected by edges. Nodes carry mutable state in a property dictionary; edges carry distance and type. The platform supplies pathfinding (Dijkstra, with optional filters by edge type and allowed node set) and the <code>EnvironmentState</code> object that the engine threads through every plugin call.</p>
+<p>What a node <em>means</em> — a planet, a port, a market venue, a department — is decided by the layers above. The platform doesn't interpret node properties.</p>
+<h3 id="layer-3-domain-rules">Layer 3 — Domain rules</h3>
+<p>The domain rules describe what your universe does. Production. Pricing. Cargo movement. Capacity limits. Scenario shocks. This is the layer where a plugin defines its physics, its economics, its behavioural laws.</p>
+<p>A space-economy plugin's domain rules look very different from a stock-market plugin's. But they share the same shape: each tick, the engine asks the plugin which phases to run, and the domain rules execute inside those phases.</p>
+<h3 id="layer-4-agentic-behaviour">Layer 4 — Agentic behaviour</h3>
+<p>Agents observe a slice of the environment and choose an action. The platform defines a single protocol: <code>choose_action(observation: dict) -&gt; dict</code>. Algorithmic agents, LLM-driven agents, and hybrid agents all conform to it.</p>
+<p>Crucially, the <em>content</em> of the observation and the <em>schema</em> of the action are domain-defined. The plugin builds the observation (deciding what each agent sees), declares which actions are available right now, validates returned actions, and executes them.</p>
+<h3 id="layer-5-analysis">Layer 5 — Analysis</h3>
+<p>Whatever you do with the simulation's output: metrics, narrative reports, charts, downstream feeds. The core persists events; the analysis layer reads them and turns them into something useful for a human or a system.</p>
+<h3 id="where-each-layer-lives">Where each layer lives</h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Provided by</th>
+<th>Code surface</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Engine</td>
+<td>constellation-core</td>
+<td><code>constellation_core.engine</code></td>
+</tr>
+<tr>
+<td>2. Topology</td>
+<td>constellation-core</td>
+<td><code>constellation_core.topology</code></td>
+</tr>
+<tr>
+<td>3. Domain rules</td>
+<td>Your plugin</td>
+<td><code>your_plugin.run_phase()</code></td>
+</tr>
+<tr>
+<td>4. Agentic behaviour</td>
+<td>Your plugin</td>
+<td><code>your_plugin.build_observation()</code>, <code>validate_action()</code>, <code>execute_action()</code>, plus your <code>AgentDecision</code> classes</td>
+</tr>
+<tr>
+<td>5. Analysis</td>
+<td>Your plugin or downstream code</td>
+<td>reads <code>constellation_core.persistence</code> event store</td>
+</tr>
+</tbody>
+</table>
+<p>Layers 1 and 2 ship in the open-source platform. Layers 3–5 are what you write, or what a plugin you depend on writes for you. The bundled <code>examples/supply_chain</code> and <code>examples/stock_market</code> are full implementations of layers 3 and 4 against the same Layer 1 + 2 substrate.</p>
+<hr />
+<h2 id="a-worked-example-a-tiny-tick-based-space-simulation">A worked example: a tiny tick-based space simulation</h2>
+<p>To make the layers concrete, here is what each one does in a small simulation. The example isn't runnable as written — for runnable code, see <a href="build-a-domain.md">Build a domain</a>. The point here is to show what each layer's code is <em>about</em>.</p>
+<h3 id="the-scenario">The scenario</h3>
+<p>Three planets in a triangle: <code>earth</code>, <code>mars</code>, <code>belt</code>. A single freighter shuttles cargo between them.</p>
+<ul>
+<li><code>earth</code> produces 5 units of cargo per tick.</li>
+<li><code>mars</code> consumes 3 units per tick.</li>
+<li><code>belt</code> consumes 2 units per tick.</li>
+<li>All three planets are connected by lanes; the freighter moves along them.</li>
+<li>At tick 100, an asteroid strike doubles the distance of the <code>earth → belt</code> lane. Watch the cargo balance shift to favour <code>mars</code>.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        [earth]
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>       /        \
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>   lane         lane
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>     /            \
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a> [mars] -- lane -- [belt]
+</code></pre></div>
+<h3 id="layer-1-engine_1">Layer 1 — Engine</h3>
+<p>You configure the engine in YAML: <code>ticks: 200</code>, the three nodes, the lanes, the freighter agent, and a <code>scenario_events:</code> block scheduling the asteroid event at tick 100. The engine reads the config, sets up state, and starts the loop. From this point on, the engine's job is to call your plugin once per tick per phase, and persist whatever events come back.</p>
+<h3 id="layer-2-topology_1">Layer 2 — Topology</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">nodes</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">earth</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">cargo_stock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">production_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mars</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="nt">cargo_stock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">      </span><span class="nt">consumption_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">belt</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nt">cargo_stock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="nt">consumption_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nt">edges</span><span class="p">:</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">earth</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mars</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span><span class="nt">distance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">earth</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">belt</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">    </span><span class="nt">distance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mars</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">    </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">belt</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">    </span><span class="nt">distance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+</code></pre></div>
+<p>That's the entire universe. constellation-core builds a <code>Graph</code> from this, and the freighter agent will use the platform's pathfinding to decide how to move. The platform doesn't know what <code>cargo_stock</code> means — those keys are domain-defined.</p>
+<h3 id="layer-3-domain-rules_1">Layer 3 — Domain rules</h3>
+<p>Your plugin declares four phases:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_tick_phases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;production&quot;</span><span class="p">,</span> <span class="s2">&quot;consumption&quot;</span><span class="p">,</span> <span class="s2">&quot;decisions&quot;</span><span class="p">,</span> <span class="s2">&quot;snapshots&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>In <code>production</code>, every node with a <code>production_rate</code> adds that to its <code>cargo_stock</code>. In <code>consumption</code>, every node with a <code>consumption_rate</code> subtracts. In <code>decisions</code>, the engine calls each agent's <code>choose_action</code>. In <code>snapshots</code>, the plugin emits a <code>CargoSnapshot</code> event for each node so downstream consumers (the viewer, the persistence store, your analysis) can render it.</p>
+<p>The domain rules are about ten lines of Python per phase. The asteroid event is a few more lines: when the scenario event fires, mutate the <code>earth → belt</code> edge's <code>distance</code>. The platform handles the scheduling.</p>
+<h3 id="layer-4-agentic-behaviour_1">Layer 4 — Agentic behaviour</h3>
+<p>The freighter is an agent. Each tick, your plugin's <code>build_observation(freighter, state)</code> constructs the observation it sees:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;agent_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;freighter_1&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;earth&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">&quot;cargo_held&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">&quot;node_stocks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;earth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">105</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;mars&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">47</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;belt&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">28</span><span class="p">},</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">&quot;available_actions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;travel&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;load&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;wait&quot;</span><span class="p">]</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>The freighter's <code>choose_action</code> returns a JSON action — <code>{"action": "load", "quantity": 50}</code> or <code>{"action": "travel", "destination": "mars"}</code>. The plugin validates the action (do you have room? is the destination reachable?) and executes it (mutate cargo, mutate location).</p>
+<p>The decision logic is yours. A simple policy: if empty, load up at <code>earth</code>; if loaded, travel to whichever consumer has the lowest stock. A more sophisticated policy could weigh production rates, lane distances, and current stock to plan multi-tick routes — and an LLM-driven freighter receives the same observation and returns the same action shape, but generates the choice via a prompt.</p>
+<h3 id="layer-5-analysis_1">Layer 5 — Analysis</h3>
+<p>After the run, you read the event store. Plot <code>cargo_stock</code> per node over time. Identify when each consumer ran dry. Measure the impact of the asteroid event — how many ticks did <code>belt</code> spend below its consumption threshold? How much did <code>mars</code> benefit from the redirected freighter capacity?</p>
+<p>The platform persists the events; the analysis is yours to write.</p>
+<hr />
+<h2 id="what-that-buys-you">What that buys you</h2>
+<p>The five-layer split is what makes constellation-core domain-agnostic. The same engine + topology that ran the space simulation above runs the bundled supply-chain example (five nodes, three agents, a Suez Canal disruption) and the bundled stock-market example (one exchange, twenty traders, an earnings surprise and a market panic). The pieces that change are layers 3, 4, and 5. Layers 1 and 2 are constant.</p>
+<p>This is also why constellation-core can host turn-based games (planned, via the event-driven engine extension), reorganisation simulations (planned, via the visibility extension), and simulations driven by real financial data (planned, via downstream tooling) on the same base. The base doesn't need to know about any of those domains.</p>
+<hr />
+<h2 id="what-crosses-between-the-layers">What crosses between the layers</h2>
+<p>Three things move between core (layers 1–2) and plugin (layers 3–5) at runtime.</p>
+<ol>
+<li><strong>The state object</strong> (<code>EnvironmentState</code>). Owned by the engine, passed into every plugin call. The plugin reads it freely (<code>state.tick</code>, <code>state.graph</code>, <code>state.nodes</code>, <code>state.agents</code>) and mutates the parts the platform exposes (node properties, agent properties, agent location). Domain-only state — anything that isn't a node, an agent, or topology — lives in plugin-private attributes.</li>
+<li><strong>The graph</strong> (<code>Graph</code>). Built from the YAML config (or by the plugin programmatically) at startup. The engine owns it after construction. Plugins read the graph at any time and project domain information into <code>Node.properties</code> so that pathfinding can filter on it.</li>
+<li><strong>Events.</strong> <code>run_phase()</code> returns a list of <code>Event</code> instances. The engine collects them, persists them, and streams them to clients over SSE. Events are append-only and one-way: plugin → core → consumers. Plugins define their own event subclasses; the core never inspects payloads beyond serialisation.</li>
+</ol>
+<p>Everything else — domain entities, decision algorithms, pricing math, narrative analysis — stays in the plugin. Core never sees it.</p>
+<hr />
+<h2 id="why-properties-are-dicts">Why properties are dicts</h2>
+<p><code>Node.properties</code> and <code>AgentData.properties</code> are typed <code>dict[str, Any]</code>. This is a deliberate choice with a real trade-off.</p>
+<p>The alternative — strongly-typed property classes per domain — would give static type-checking and IDE autocomplete, but would require the core to know about each domain. That breaks the "core is domain-agnostic" rule: the platform would either need a generic mechanism for plugins to register their own typed schemas (significant complexity) or would force each domain to fork core (no portability).</p>
+<p><code>dict[str, Any]</code> keeps core ignorant. Plugins read and write properties using the keys they define; type discipline is enforced inside the plugin, not by the platform. If a plugin wants stricter typing internally, it can wrap reads and writes in helper methods that validate against a Pydantic model — a pattern that costs about twenty lines per domain and stays opt-in.</p>
+<hr />
+<h2 id="where-this-fits-in-the-ecosystem">Where this fits in the ecosystem</h2>
+<p>A few honest distinctions against tools that occupy adjacent space.</p>
+<ul>
+<li><strong>Mesa, AgentPy</strong> — mature Python frameworks for classical agent-based modelling. Excellent if your simulation is in-process, single-machine, and benefits from a rich library of pre-built schedulers and chart components. constellation-core's JSON-based agent protocol is the better starting point if your agents may be remote, LLM-driven, or distributed.</li>
+<li><strong>SimPy</strong> — discrete-event simulation. The natural unit is "next event" rather than "next tick". constellation-core uses fixed ticks today; if your model is fundamentally event-driven, SimPy is the better fit (or wait for the planned event-driven engine extension).</li>
+<li><strong>CAMEL, AutoGen, OASIS</strong> — multi-agent LLM frameworks. They focus on the agents and are largely agnostic about the world. constellation-core is the inverse: it focuses on the world and provides a minimal protocol for any agent — algorithmic or LLM — to plug in.</li>
+<li><strong>Gymnasium, PettingZoo</strong> — RL environments. Formalised observation/action/reward loops for <em>training</em> learning agents. constellation-core does not enforce a reward channel and has no built-in episode/step abstraction; it is for <em>running</em> simulations with already-defined agents, not training them.</li>
+</ul>
+<hr />
+<h2 id="the-boundary-rule">The boundary rule</h2>
+<p>When deciding whether new code belongs in constellation-core or in a plugin, apply one test:</p>
+<blockquote>
+<p><strong>Could a completely different domain — a wheat market, a logistics network, a traffic model, a board game — reuse this code unchanged?</strong></p>
+<ul>
+<li><strong>Yes</strong> → it belongs in constellation-core (layer 1 or 2).</li>
+<li><strong>No</strong> → it belongs in a plugin (layer 3, 4, or 5).</li>
+</ul>
+</blockquote>
+<p>That rule is the constitution of the platform. Everything in <a href="#where-each-layer-lives">the capability table above</a> passes the test. Everything that doesn't pass — pricing math, action types, agent strategies, domain entities — lives in plugins.</p>
+<p>When in doubt, default to the plugin side. Code can always be promoted to core later if a third domain proves the abstraction is general; code that gets prematurely added to core is much harder to remove without breaking downstream plugins.</p>
+<hr />
+<h2 id="where-to-go-next">Where to go next</h2>
+<ul>
+<li><strong><a href="build-a-domain.md">Build a domain</a></strong> — apply the five layers: write your own <code>SimulationPlugin</code> end-to-end, with runnable code.</li>
+<li><strong><a href="plugin-protocol.md">Plugin protocol</a></strong> — the full reference for the methods that span the seam, including the per-tick call sequence.</li>
+<li><strong><a href="configuration.md">Configuration</a></strong> — the YAML schema that initialises a topology, agents, and scenario events.</li>
+<li><strong><a href="examples.md">Examples</a></strong> — read the bundled supply-chain and stock-market plugins as concrete instances of the model.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
