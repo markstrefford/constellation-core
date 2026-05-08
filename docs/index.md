@@ -1,24 +1,40 @@
-# constellation-core
+# Constellation
 
-A domain-agnostic simulation platform for running multi-agent simulations.
+**Build, evaluate, and stress-test multi-agent systems.**
 
-Define an environment as a graph of nodes and edges, drop in agents that observe and act, and let the engine run. All domain logic lives in plugins — the core never assumes what your simulation is about. The same engine runs a global supply chain, a stock market, and (in principle) anything else you can describe as agents acting on a graph.
+Constellation is a domain-agnostic platform for running large-scale multi-agent simulations. It allows you to define an environment as a graph, drop in agents (algorithmic or LLM-driven), and observe how their individual decisions aggregate into systemic behavior.
+
+## Why Constellation?
+
+Most agent frameworks focus on the "vertical" stack: how a single agent thinks, uses tools, and completes a task. Constellation focuses on the "horizontal" stack: **how hundreds of agents interact within a shared environment.**
+
+| Feature | Individual Agent Frameworks (e.g., LangChain) | Constellation |
+|---------|----------------------------------------------|---------------|
+| **Focus** | Task completion, tool use, reasoning. | Systemic behavior, emergent phenomena, risk. |
+| **Environment** | Usually a static API or a single database. | A dynamic graph-based world with its own physics. |
+| **Interaction** | Sequential or small-group orchestration. | Massively parallel agents competing/collaborating. |
+| **Goal** | Get the "right" answer from one agent. | Understand how the *system* responds to shocks. |
+
+### Key Capabilities
+
+- **Domain-Agnostic Core:** The engine knows about graphs and ticks; your plugin defines the physics (prices, cargo, sentiment, etc.).
+- **Scenario Shocks:** Inject events mid-simulation—like a supply chain disruption or a market crash—to see how your agents adapt.
+- **Agent Agnostic:** Mix simple heuristic bots with state-of-the-art LLM agents in the same environment.
+- **Real-Time Visibility:** Use the React-based viewer to watch simulations unfold and track system-level metrics in real-time.
 
 ---
 
-## Where to go next
+## Where to start?
 
-- **[Getting started](getting-started.md)** — install, run an example, see something happen.
-- **[Concepts](concepts.md)** — what's in the core, what's in plugins, why it's split this way.
-- **[Build a domain](build-a-domain.md)** — write your own `SimulationPlugin` end-to-end.
-- **[Plugin protocol](plugin-protocol.md)** — full reference for the seam between core and plugins.
+- **[Getting started](getting-started.md)** — Install and run your first simulation in 5 minutes.
+- **[Concepts](concepts.md)** — Learn about the core-plugin split and the simulation loop.
+- **[Build a domain](build-a-domain.md)** — Step-by-step guide to creating your own simulation.
+- **[Examples](examples.md)** — Explore the built-in Supply Chain and Stock Market simulations.
 
 ---
 
-## Project status
+## Project Status
 
-constellation-core is at version **0.2.1** — early but functional.
+Constellation is currently in **Alpha (v0.2.1)**. It is being used to research systemic risk in autonomous systems.
 
-Two example domains ship with the repo: a global supply chain (5 nodes, 3 logistics agents, a Suez Canal disruption event) and a mini stock market (1 exchange, 20 traders with mixed strategies, an earnings surprise and a market panic). Both demonstrate the plugin model end-to-end. Both have rough edges that are documented honestly in [Examples](examples.md).
-
-The platform is open source under the [Apache 2.0 license](https://github.com/markstrefford/constellation-core/blob/main/LICENSE). Source code, issues, and contributions: [github.com/markstrefford/constellation-core](https://github.com/markstrefford/constellation-core).
+The project is open source under the [Apache 2.0 license](https://github.com/markstrefford/constellation-core/blob/main/LICENSE). We welcome contributions from researchers and engineers interested in the frontier of multi-agent systems.
