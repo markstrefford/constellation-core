@@ -2,6 +2,54 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://markstrefford.github.io/constellation-core/</loc>
-         <lastmod>2026-05-07</lastmod>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://markstrefford.github.io/constellation-core/agents/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://markstrefford.github.io/constellation-core/build-a-domain/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://markstrefford.github.io/constellation-core/changelog/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://markstrefford.github.io/constellation-core/concepts/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://markstrefford.github.io/constellation-core/configuration/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://markstrefford.github.io/constellation-core/contributing/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://markstrefford.github.io/constellation-core/examples/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://markstrefford.github.io/constellation-core/faq/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://markstrefford.github.io/constellation-core/getting-started/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://markstrefford.github.io/constellation-core/persistence/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://markstrefford.github.io/constellation-core/plugin-protocol/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://markstrefford.github.io/constellation-core/viewer/</loc>
+         <lastmod>2026-05-08</lastmod>
     </url>
 </urlset>
