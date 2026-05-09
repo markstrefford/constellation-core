@@ -72,7 +72,11 @@ When you ran the supply chain simulation:
 3. **The Agents** (ships and trucks) began moving cargo between nodes to maximize their objectives.
 4. **A Scenario Event** occurred at tick 200: a "Suez Canal blockage" increased the distance between Shanghai and Rotterdam, causing a ripple effect of shortages and price spikes across the network.
 
+---
+
 ## Next Steps
 
 - **[Understand the Concepts](concepts.md)** — Learn how Constellation is structured.
 - **[Build your own Domain](build-a-domain.md)** — Start writing your own simulation physics.
+
+[Back to Home](index.md)

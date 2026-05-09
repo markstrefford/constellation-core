@@ -57,3 +57,8 @@ class SnapshotEvent(Event):
 ```
 
 The viewer will automatically detect the properties in this snapshot and offer them for visualization in the inspector panel.
+
+---
+
+- **[Next: Examples](examples.md)**
+- **[Back to Home](index.md)**

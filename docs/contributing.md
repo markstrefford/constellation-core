@@ -41,3 +41,8 @@ python -m pytest tests/ -v
 ## Questions?
 
 If you have questions about the codebase or how to implement a specific feature, please open an issue on GitHub.
+
+---
+
+- **[Next: Changelog](changelog.md)**
+- **[Back to Home](index.md)**

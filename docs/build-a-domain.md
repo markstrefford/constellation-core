@@ -187,3 +187,8 @@ print("Simulation complete. Check the events to see if the Ranger saved the fore
 - **Visualize:** Run this with `python -m constellation_core serve` to see the heat levels change in the viewer.
 - **LLMs:** Replace `RangerAgent` with an `LLMAgent` to see if GPT-4 is a better firefighter than our heuristic script.
 - **Scenarios:** Add more lightning strikes in `config.yaml` to test the Ranger's efficiency under pressure.
+
+---
+
+- **[Next: Plugin Protocol Reference](plugin-protocol.md)**
+- **[Back to Home](index.md)**

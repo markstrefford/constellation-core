@@ -73,3 +73,8 @@ class MyPlugin:
 
     # ... implement other methods ...
 ```
+
+---
+
+- **[Next: Configuration Reference](configuration.md)**
+- **[Back to Home](index.md)**

@@ -37,3 +37,8 @@ This is particularly useful for:
 - **Auditing LLM Decisions:** Seeing exactly what observation an LLM received before it took a specific action.
 - **Sensitivity Analysis:** Comparing how the same scenario event impacted different runs.
 - **Reporting:** Generating time-series charts from historical simulation data.
+
+---
+
+- **[Next: Simulation Viewer](viewer.md)**
+- **[Back to Home](index.md)**

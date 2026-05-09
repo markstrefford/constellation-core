@@ -29,3 +29,7 @@ All notable changes to Constellation will be documented in this file.
 - Initial React-based real-time viewer.
 - Global Supply Chain example.
 - Mini Stock Market example.
+
+---
+
+- **[Back to Home](index.md)**

@@ -69,3 +69,8 @@ Because the plugin defines the observation, you can control exactly what each ag
 - A "Market Trader" might see price history but not the inventory levels of other traders.
 
 This allows researchers to study how different information levels impact system-wide efficiency and stability.
+
+---
+
+- **[Next: Persistence Reference](persistence.md)**
+- **[Back to Home](index.md)**

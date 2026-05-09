@@ -106,3 +106,8 @@ agents:
 domain_config:
   tax_rate: 0.05
 ```
+
+---
+
+- **[Next: Agents Reference](agents.md)**
+- **[Back to Home](index.md)**

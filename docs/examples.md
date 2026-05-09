@@ -57,3 +57,8 @@ python -m constellation_core run examples/supply_chain/config.yaml
 # Run with server (for viewer)
 python -m constellation_core serve examples/stock_market/config.yaml
 ```
+
+---
+
+- **[Next: FAQ](faq.md)**
+- **[Back to Home](index.md)**

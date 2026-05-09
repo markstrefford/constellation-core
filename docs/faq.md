@@ -17,3 +17,8 @@ Constellation uses a domain-agnostic graph structure. For very large graphs (mil
 
 ## Can agents communicate with each other?
 In the current version, agents communicate *indirectly* by changing the state of the world (e.g., buying a stock, moving a cargo container). Direct agent-to-agent messaging is a planned feature for a future release.
+
+---
+
+- **[Next: Contributing](contributing.md)**
+- **[Back to Home](index.md)**

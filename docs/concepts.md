@@ -72,4 +72,7 @@ By keeping the core domain-agnostic, we can use the exact same engine to simulat
 - **Finance:** Where nodes are exchanges and agents are traders.
 - **Sociology:** Where nodes are cities and agents are citizens.
 
-[Learn how to build your first domain &rarr;](build-a-domain.md)
+---
+
+- **[Next: Build a Domain](build-a-domain.md)**
+- **[Back to Home](index.md)**
